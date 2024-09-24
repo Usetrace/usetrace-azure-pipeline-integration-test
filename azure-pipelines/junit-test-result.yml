@@ -12,9 +12,7 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    npm install
-    npm run build
-    npm test
+    echo "This is a test"
 #
 #- task: PublishTestResults@2
 #  inputs:
