@@ -5,14 +5,13 @@ pool:
   name: 'Azure Pipelines'
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSource: 'spec'
-    versionSpec: '20.x'
-  displayName: 'Install Node.js'
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
 
 - script: |
-    echo "This is a test"
+    echo Run a test
+  displayName: 'Run a multi-line script'
+
 #
 #- task: PublishTestResults@2
 #  inputs:
