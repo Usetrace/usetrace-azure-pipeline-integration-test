@@ -8,9 +8,17 @@ steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
-- script: |
-    echo Run a test
-  displayName: 'Run a multi-line script'
+
+- script: git clone https://github.com/usetrace/universal-integration.git
+- script: npm install --prefix universal-integration
+
+# Passing some parameters as env vars
+- script: export INPUT_BUILD_TIMEOUT_SECONDS=900
+- script: export INPUT_FAIL_ON_FAILED_TRACES=false
+
+# Parameters can be passed by the command line too. These have precedence over env var ones
+- script: npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox 
+
 
 #
 #- task: PublishTestResults@2
