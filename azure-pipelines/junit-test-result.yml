@@ -4,43 +4,46 @@ trigger:
 pool:
   name: 'Azure Pipelines'
 
-steps:
-- script: |
-    git clone https://github.com/usetrace/universal-integration.git
-    npm install --prefix universal-integration
+jobs:
+- job: trigger_a_trace
+  steps:
+  - script: |
+      git clone https://github.com/usetrace/universal-integration.git
+      npm install --prefix universal-integration
 
-    # Passing some parameters as env vars
-    export INPUT_BUILD_TIMEOUT_SECONDS=900
-    export INPUT_FAIL_ON_FAILED_TRACES=true
+      # Passing some parameters as env vars
+      export INPUT_BUILD_TIMEOUT_SECONDS=900
+      export INPUT_FAIL_ON_FAILED_TRACES=true
 
-    # Parameters can be passed by the command line too. These have precedence over env var ones
-    # PASS
-    #npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox
-    
-    # FAILS
-    #npm run usetrace --prefix universal-integration -- --traceId ZvW-QjrzOwAYPUUKZ2_i6uzz8ZyL8cpe --browsers chrome,firefox
-    
-    # RUNS PROJECT
-    npm run usetrace --prefix universal-integration -- --projectId Zux6YTrzOwAYPAJBLnY5jfa92z4wlijK
+      # Parameters can be passed by the command line too. These have precedence over env var ones
+      # PASS
+      #npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox
+      
+      # FAILS
+      #npm run usetrace --prefix universal-integration -- --traceId ZvW-QjrzOwAYPUUKZ2_i6uzz8ZyL8cpe --browsers chrome,firefox
+      
+      # RUNS PROJECT
+      npm run usetrace --prefix universal-integration -- --projectId Zux6YTrzOwAYPAJBLnY5jfa92z4wlijK
+    displayName: 'Runs the integration'
 
-  displayName: 'Runs the integration'
+- job: check_result
+  steps:
+  # Process single trace artifact
+  - script: |
+      cat output.json | jq '.status'
+      cat output.json
+    displayName: 'Check results'
 
-# Process single trace artifact
-- script: |
-    cat output.json | jq '.status'
-    cat output.json
-  displayName: 'Check results'
-
-# Process entire project results
-- script: |
-    cat output.json | jq '.report.failures'
-    if [ $(jq '.report.failures | length' output.json) -eq 0 ]; then
-      echo "MOCK: exit 0"
-      # exit 0
-    else
-      echo "MOCK: exit 1"
-      # exit 1
-    fi
+  # Process entire project results
+  - script: |
+      cat output.json | jq '.report.failures'
+      if [ $(jq '.report.failures | length' output.json) -eq 0 ]; then
+        echo "MOCK: exit 0"
+        # exit 0
+      else
+        echo "MOCK: exit 1"
+        # exit 1
+      fi
 
 #
 #- task: PublishTestResults@2
