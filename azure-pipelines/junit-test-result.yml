@@ -17,7 +17,12 @@ steps:
     export INPUT_FAIL_ON_FAILED_TRACES=false
 
     # Parameters can be passed by the command line too. These have precedence over env var ones
-    npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox 
+    # PASS
+    #npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox
+
+    # FAILS
+    npm run usetrace --prefix universal-integration -- --traceId ZvW-QjrzOwAYPUUKZ2_i6uzz8ZyL8cpe --browsers chrome,firefox
+
   displayName: 'Runs the integration'
 
 # Process single trace artifact
