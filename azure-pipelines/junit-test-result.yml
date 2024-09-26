@@ -8,6 +8,37 @@ steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
+- script: |
+    git clone https://github.com/usetrace/universal-integration.git
+    npm install --prefix universal-integration
+
+    # Passing some parameters as env vars
+    export INPUT_BUILD_TIMEOUT_SECONDS=900
+    export INPUT_FAIL_ON_FAILED_TRACES=false
+
+    # Parameters can be passed by the command line too. These have precedence over env var ones
+    npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox 
+  displayName: 'Gets the integration'
+
+- script: npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox 
+  displayName: 'Runs the integration'
+
+# Process single trace artifact
+- script: |
+    cat output.json | jq '.status'
+    cat output.json
+  displayName: 'Check results'
+
+# Process entire project results
+- script: |
+    cat output.json | jq '.report.failures'
+    if [ $(jq '.report.failures | length' output.json) -eq 0 ]; then
+      echo "MOCK: exit 0"
+      # exit 0
+    else
+      echo "MOCK: exit 1"
+      # exit 1
+    fi
 
 - script: git clone https://github.com/usetrace/universal-integration.git
 - script: npm install --prefix universal-integration
@@ -18,6 +49,13 @@ steps:
 
 # Parameters can be passed by the command line too. These have precedence over env var ones
 - script: npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox 
+
+
+
+
+
+
+
 
 
 #
