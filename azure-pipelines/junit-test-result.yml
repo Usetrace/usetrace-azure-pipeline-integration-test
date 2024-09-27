@@ -56,7 +56,12 @@ jobs:
   - download: current
     artifact: output
     displayName: 'Download output artifact'
-  
+
+  - script: |
+      ls
+      pwd
+    displayName: 'DEBUG'
+
   - script: |
       echo "Contents of output.json:"
       cat ./output/output.json
