@@ -51,15 +51,18 @@ jobs:
 - job: successfulExecution
   dependsOn: triggerATrace
   condition: succeeded('triggerATrace')
+  variables:
+    jsonContent: $[ dependencies.Job1.outputs['setVar.jsonContent'] ]
   steps:
-  - download: current
-    artifact: output
-    displayName: 'Download output artifact'
-
   - script: |
       echo "Contents of output.json:"
-      cat $(Pipeline.Workspace)/output/output.json
-      cat $(Pipeline.Workspace)/output/output.json | jq '.status'
+      echo '$(jsonContent)' | jq -r '.key'
+      echo '$(jsonContent)' | jq -r '.number'
+      echo '$(jsonContent)' | jq -r '.nested.inner'
+      
+      # Storing a value in a variable for later use
+      keyValue=$(echo '$(jsonContent)' | jq -r '.key')
+      echo "The value of 'key' is: $keyValue"
       echo SUCCESS!!!
     displayName: 'Successful Execution'
 
