@@ -10,47 +10,55 @@ jobs:
   - script: |
       git clone https://github.com/usetrace/universal-integration.git
       npm install --prefix universal-integration
-      
+
       # Passing some parameters as env vars
       export INPUT_BUILD_TIMEOUT_SECONDS=900
       export INPUT_FAIL_ON_FAILED_TRACES=false
-      
-      # Run the trace and capture the output
-      npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox > trace_output.json
-      
-      # Read the content and set it as an output variable
-      content=$(cat trace_output.json)
+
+      # Parameters can be passed by the command line too. These have precedence over env var ones
+      npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox
+
+      # Running project
+      # npm run usetrace --prefix universal-integration -- --projectId Zux6YTrzOwAYPAJBLnY5jfa92z4wlijK
+
+      # Capturing the content of the output.json
+      content=$(cat output.json)
       echo "##vso[task.setvariable variable=jsonContent;isoutput=true]$content"
-    name: runTrace
-    displayName: 'Run the integration'
+    displayName: 'Runs the integration'
 
 - job: failedExecution
   dependsOn: triggerATrace
-  condition: failed()
+  condition: failed('triggerATrace')
   variables:
-    jsonContent: $[ dependencies.triggerATrace.outputs['runTrace.jsonContent'] ]
+    jsonContent: $[ dependencies.triggerATrace.outputs['setVar.jsonContent'] ]
   steps:
-  - bash: |
-      echo "Contents of trace output:"
-      echo '$(jsonContent)' | jq '.'
-      echo "Failures:"
-      echo '$(jsonContent)' | jq -r '.report.failures[]?.message'
+  - script: |
+      echo "Contents of output.json:"
+      echo '$(jsonContent)' | jq -r '.report.failures'
+      echo '$(jsonContent)' | jq -r '.report'
+
+      # Storing a value in a variable for later use
+      keyValue=$(echo '$(jsonContent)' | jq -r '.key')
+      echo "The value of 'key' is: $keyValue"
       echo FAILURE!!!
-    displayName: 'Failed execution'
+    displayName: 'Failed Execution'
 
 - job: successfulExecution
   dependsOn: triggerATrace
-  condition: succeeded()
+  condition: succeeded('triggerATrace')
   variables:
-    jsonContent: $[ dependencies.triggerATrace.outputs['runTrace.jsonContent'] ]
+    jsonContent: $[ dependencies.triggerATrace.outputs['setVar.jsonContent'] ]
   steps:
-  - bash: |
-      echo "Contents of trace output:"
+  - script: |
+      echo "Contents of output.json:"
       echo '$(jsonContent)'
       echo "-------------------------------------------------------"
-      echo "Failures (should be empty):"
-      echo '$(jsonContent)' | jq -r '.report.failures[]?.message'
-      echo "Traces:"
-      echo '$(jsonContent)' | jq -r '.traces[]'
+      echo '$(jsonContent)' | jq -r '.report.failures'
+      echo '$(jsonContent)' | jq -r '.report'
+      echo '$(jsonContent)' | jq -r '.traces'
+
+      # Storing a value in a variable for later use
+      keyValue=$(echo '$(jsonContent)' | jq -r '.failures')
+      echo "The value of 'key' is: $keyValue"
       echo SUCCESS!!!
     displayName: 'Successful Execution'
