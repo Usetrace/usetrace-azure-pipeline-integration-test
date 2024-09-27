@@ -46,7 +46,7 @@ jobs:
   steps:
   - bash: |
       echo "Contents of trace output:"
-      echo '$(jsonContent)' | jq '.'
+      echo '$(jsonContent)'
       echo "-------------------------------------------------------"
       echo "Failures (should be empty):"
       echo '$(jsonContent)' | jq -r '.report.failures[]?.message'
