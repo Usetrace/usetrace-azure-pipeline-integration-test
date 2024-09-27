@@ -37,9 +37,8 @@ jobs:
   steps:
   - script: |
       echo "Contents of output.json:"
-      echo '$(jsonContent)' | jq -r '.key'
-      echo '$(jsonContent)' | jq -r '.number'
-      echo '$(jsonContent)' | jq -r '.nested.inner'
+      echo '$(jsonContent)' | jq -r '.report.failures'
+      echo '$(jsonContent)' | jq -r '.report'
       
       # Storing a value in a variable for later use
       keyValue=$(echo '$(jsonContent)' | jq -r '.key')
@@ -56,9 +55,9 @@ jobs:
   steps:
   - script: |
       echo "Contents of output.json:"
-      echo '$(jsonContent)' | jq -r '.key'
-      echo '$(jsonContent)' | jq -r '.number'
-      echo '$(jsonContent)' | jq -r '.nested.inner'
+      echo '$(jsonContent)' | jq -r '.report.failures'
+      echo '$(jsonContent)' | jq -r '.report'
+      echo '$(jsonContent)' | jq -r '.traces'
       
       # Storing a value in a variable for later use
       keyValue=$(echo '$(jsonContent)' | jq -r '.key')
