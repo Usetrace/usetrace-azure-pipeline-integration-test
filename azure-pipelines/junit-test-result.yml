@@ -33,7 +33,7 @@ jobs:
   dependsOn: triggerATrace
   condition: failed('triggerATrace')
   variables:
-    jsonContent: $[ dependencies.Job1.outputs['setVar.jsonContent'] ]
+    jsonContent: $[ dependencies.triggerATrace.outputs['setVar.jsonContent'] ]
   steps:
   - script: |
       echo "Contents of output.json:"
