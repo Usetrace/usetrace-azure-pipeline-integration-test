@@ -26,7 +26,7 @@ jobs:
       #npm run usetrace --prefix universal-integration -- --projectId Zux6YTrzOwAYPAJBLnY5jfa92z4wlijK
     displayName: 'Runs the integration'
 
-  - publish: $(System.DefaultWorkingDirectory)/output.json
+  - publish: ./output.json
     artifact: output
     displayName: 'Publish the output artifact'
 
@@ -59,7 +59,7 @@ jobs:
   
   - script: |
       echo "Contents of output.json:"
-      cat $(Pipeline.Workspace)/output/output.json
+      cat ./output/output.json
     displayName: 'Check content 1'
 
   - script: |
