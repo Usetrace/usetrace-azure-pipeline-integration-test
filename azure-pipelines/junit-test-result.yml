@@ -10,11 +10,11 @@ jobs:
   - script: |
       git clone https://github.com/usetrace/universal-integration.git
       npm install --prefix universal-integration
-
+      
       # Passing some parameters as env vars
       export INPUT_BUILD_TIMEOUT_SECONDS=900
       export INPUT_FAIL_ON_FAILED_TRACES=false
-
+      
       # Parameters can be passed by the command line too. These have precedence over env var ones
       # PASS
       npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox
@@ -60,7 +60,7 @@ jobs:
       echo '$(jsonContent)' | jq -r '.traces'
       
       # Storing a value in a variable for later use
-      keyValue=$(echo '$(jsonContent)' | jq -r '.key')
+      keyValue=$(echo '$(jsonContent)' | jq -r '.failures')
       echo "The value of 'key' is: $keyValue"
       echo SUCCESS!!!
     displayName: 'Successful Execution'
