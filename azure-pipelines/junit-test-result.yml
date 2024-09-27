@@ -17,16 +17,18 @@ jobs:
 
       # Parameters can be passed by the command line too. These have precedence over env var ones
       # PASS
-      #npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox
+      npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox
       
       # FAILS
-      npm run usetrace --prefix universal-integration -- --traceId ZvW-QjrzOwAYPUUKZ2_i6uzz8ZyL8cpe
+      #npm run usetrace --prefix universal-integration -- --traceId ZvW-QjrzOwAYPUUKZ2_i6uzz8ZyL8cpe
       
       # RUNS PROJECT
       #npm run usetrace --prefix universal-integration -- --projectId Zux6YTrzOwAYPAJBLnY5jfa92z4wlijK
-  - publish: ./output.json
-    artifact: output
     displayName: 'Runs the integration'
+
+  - publish: $(System.DefaultWorkingDirectory)/output.json
+    artifact: output
+    displayName: 'Publish the output artifact'
 
 
 - job: failedExecution
@@ -37,9 +39,9 @@ jobs:
     artifact: output
     displayName: 'Download integrationOutput artifact'
   
-#  - script: |
-#      echo "Contents of output.json:"
-#      cat $(Pipeline.Workspace)/integrationOutput/output.json
+  - script: |
+      echo "Contents of output.json:"
+      cat $(Pipeline.Workspace)/output/output.json
   
   - script: |
       cat output.json | jq '.status'
@@ -51,6 +53,15 @@ jobs:
   dependsOn: triggerATrace
   condition: succeeded('triggerATrace')
   steps:
+  - download: current
+    artifact: output
+    displayName: 'Download output artifact'
+  
+  - script: |
+      echo "Contents of output.json:"
+      cat $(Pipeline.Workspace)/output/output.json
+    displayName: 'Check content 1'
+
   - script: |
       cat output.json | jq '.status'
       echo SUCCESS!!!
