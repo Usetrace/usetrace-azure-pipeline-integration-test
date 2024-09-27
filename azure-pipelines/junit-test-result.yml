@@ -24,15 +24,23 @@ jobs:
       
       # RUNS PROJECT
       npm run usetrace --prefix universal-integration -- --projectId Zux6YTrzOwAYPAJBLnY5jfa92z4wlijK
+  - publish: $(System.DefaultWorkingDirectory)/output.json
+    artifact: output
     displayName: 'Runs the integration'
-
 
 
 - job: failedExecution
   dependsOn: triggerATrace
   condition: failed('triggerATrace')
   steps:
-  # Process single trace artifact
+  - download: current
+    artifact: output
+    displayName: 'Download integrationOutput artifact'
+  
+#  - script: |
+#      echo "Contents of output.json:"
+#      cat $(Pipeline.Workspace)/integrationOutput/output.json
+  
   - script: |
       cat output.json | jq '.status'
       echo FAILURE!!!
@@ -49,9 +57,7 @@ jobs:
       echo SUCCESS!!!
     displayName: 'Successful Execution'
 
-#
-#- task: PublishTestResults@2
-#  inputs:
-#    testResultsFormat: 'JUnit'
-#    testResultsFiles: '**/TEST-*.xml'
-#  displayName: 'npm install and build'
+
+
+
+
