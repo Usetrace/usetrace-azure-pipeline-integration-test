@@ -13,18 +13,18 @@ jobs:
 
       # Passing some parameters as env vars
       export INPUT_BUILD_TIMEOUT_SECONDS=900
-      export INPUT_FAIL_ON_FAILED_TRACES=true
+      export INPUT_FAIL_ON_FAILED_TRACES=false
 
       # Parameters can be passed by the command line too. These have precedence over env var ones
       # PASS
       #npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox
       
       # FAILS
-      #npm run usetrace --prefix universal-integration -- --traceId ZvW-QjrzOwAYPUUKZ2_i6uzz8ZyL8cpe --browsers chrome,firefox
+      npm run usetrace --prefix universal-integration -- --traceId ZvW-QjrzOwAYPUUKZ2_i6uzz8ZyL8cpe
       
       # RUNS PROJECT
-      npm run usetrace --prefix universal-integration -- --projectId Zux6YTrzOwAYPAJBLnY5jfa92z4wlijK
-  - publish: $(System.DefaultWorkingDirectory)/output.json
+      #npm run usetrace --prefix universal-integration -- --projectId Zux6YTrzOwAYPAJBLnY5jfa92z4wlijK
+  - publish: ./output.json
     artifact: output
     displayName: 'Runs the integration'
 
@@ -51,13 +51,8 @@ jobs:
   dependsOn: triggerATrace
   condition: succeeded('triggerATrace')
   steps:
-  # Process single trace artifact
   - script: |
       cat output.json | jq '.status'
       echo SUCCESS!!!
     displayName: 'Successful Execution'
-
-
-
-
 
