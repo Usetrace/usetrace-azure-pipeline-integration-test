@@ -51,10 +51,12 @@ jobs:
   dependsOn: triggerATrace
   condition: succeeded('triggerATrace')
   variables:
-    jsonContent: $[ dependencies.Job1.outputs['setVar.jsonContent'] ]
+    jsonContent: $[ dependencies.triggerATrace.outputs['setVar.jsonContent'] ]
   steps:
   - script: |
       echo "Contents of output.json:"
+      echo '$(jsonContent)'
+      echo "-------------------------------------------------------"
       echo '$(jsonContent)' | jq -r '.report.failures'
       echo '$(jsonContent)' | jq -r '.report'
       echo '$(jsonContent)' | jq -r '.traces'
