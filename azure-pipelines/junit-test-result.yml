@@ -24,25 +24,26 @@ jobs:
       
       # RUNS PROJECT
       #npm run usetrace --prefix universal-integration -- --projectId Zux6YTrzOwAYPAJBLnY5jfa92z4wlijK
+      content=$(cat output.json)
+      echo "##vso[task.setvariable variable=jsonContent;isoutput=true]$content"
     displayName: 'Runs the integration'
-
-  - publish: $(System.DefaultWorkingDirectory)/output.json
-    artifact: output
-    displayName: 'Publish the output artifact'
 
 
 - job: failedExecution
   dependsOn: triggerATrace
   condition: failed('triggerATrace')
+  variables:
+    jsonContent: $[ dependencies.Job1.outputs['setVar.jsonContent'] ]
   steps:
-  - download: current
-    artifact: output
-    displayName: 'Download integrationOutput artifact'
-  
   - script: |
       echo "Contents of output.json:"
-      cat $(Pipeline.Workspace)/output/output.json
-      cat $(Pipeline.Workspace)/output/output.json | jq '.status'
+      echo '$(jsonContent)' | jq -r '.key'
+      echo '$(jsonContent)' | jq -r '.number'
+      echo '$(jsonContent)' | jq -r '.nested.inner'
+      
+      # Storing a value in a variable for later use
+      keyValue=$(echo '$(jsonContent)' | jq -r '.key')
+      echo "The value of 'key' is: $keyValue"
       echo FAILURE!!!
     displayName: 'Failed execution'
 
