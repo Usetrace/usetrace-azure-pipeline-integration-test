@@ -13,13 +13,13 @@ jobs:
 
       # Passing some parameters as env vars
       export INPUT_BUILD_TIMEOUT_SECONDS=900
-      export INPUT_FAIL_ON_FAILED_TRACES=false
+      export INPUT_FAIL_ON_FAILED_TRACES=true
 
       # Parameters can be passed by the command line too. These have precedence over env var ones
-      npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox
+      # npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW --browsers chrome,firefox
 
       # Running project
-      # npm run usetrace --prefix universal-integration -- --projectId Zux6YTrzOwAYPAJBLnY5jfa92z4wlijK
+      npm run usetrace --prefix universal-integration -- --projectId Zux6YTrzOwAYPAJBLnY5jfa92z4wlijK
 
       # Capturing the content of the output.json
       content=$(cat output.json)
