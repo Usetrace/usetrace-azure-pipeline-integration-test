@@ -13,7 +13,7 @@ jobs:
 
       # Passing some parameters as env vars
       export INPUT_BUILD_TIMEOUT_SECONDS=900
-      export INPUT_FAIL_ON_FAILED_TRACES=false
+      export INPUT_FAIL_ON_FAILED_TRACES=true
       
       npm run usetrace --prefix universal-integration -- --projectId Zux6YTrzOwAYPAJBLnY5jfa92z4wlijK
     displayName: 'Runs the integration'
