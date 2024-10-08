@@ -13,7 +13,7 @@ jobs:
 
       # Passing some parameters as env vars
       export INPUT_BUILD_TIMEOUT_SECONDS=900
-      export INPUT_FAIL_ON_FAILED_TRACES=true
+      export INPUT_FAIL_ON_FAILED_TRACES=false
 
       # Trace that FAILS
       npm run usetrace --prefix universal-integration -- --traceId ZvW-QjrzOwAYPUUKZ2_i6uzz8ZyL8cpe
