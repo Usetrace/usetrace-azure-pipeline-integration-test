@@ -14,8 +14,13 @@ jobs:
       # Passing some parameters as env vars
       export INPUT_BUILD_TIMEOUT_SECONDS=900
       export INPUT_FAIL_ON_FAILED_TRACES=true
+
+      # Trace that FAILS
+      npm run usetrace --prefix universal-integration -- --traceId ZvW-QjrzOwAYPUUKZ2_i6uzz8ZyL8cpe
       
-      npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW
+      # Trace that works
+      # npm run usetrace --prefix universal-integration -- --traceId Zux6zjrzOwAYPAJK_cLMvZ3_xVspdHDW
+
     displayName: 'Runs the integration'
 
   - publish: $(System.DefaultWorkingDirectory)/output.json
